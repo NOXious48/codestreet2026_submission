@@ -5,62 +5,6 @@
 
 ---
 
-## §0. Document Control
-
-| Field              | Value                                                                                                             |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| Document title     | PRD — Governance Layer for Financial Agents                                                                       |
-| Version            | 0.1 (Draft)                                                                                                       |
-| Status             | In Review                                                                                                         |
-| Document owner     | Product Management                                                                                                |
-| Contributing roles | Product, Engineering, Solution Architecture, Risk, Compliance, Security                                           |
-| Intended audience  | Product Managers, Engineering Managers, Solution Architects, Risk & Compliance leads, Hackathon Judges            |
-| Related documents  | _(to be produced)_ Solution & System Design; Backend & Data Design; AI & Governance Design; Proposal/Presentation |
-| Confidentiality    | Internal — Hackathon submission                                                                                   |
-
-### Reviewer sign-off
-
-| Reviewer role          | Name | Decision | Date |
-| ---------------------- | ---- | -------- | ---- |
-| Product Management     | —    | Pending  | —    |
-| Engineering Management | —    | Pending  | —    |
-| Solution Architecture  | —    | Pending  | —    |
-| Risk / Compliance      | —    | Pending  | —    |
-| Security               | —    | Pending  | —    |
-
-### Change log
-
-| Version   | Date       | Author  | Summary                                                                                                                                                                                                      |
-| --------- | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 0.1       | 2026-07-23 | Product | Initial draft — Document Control and Executive Summary.                                                                                                                                                      |
-| 0.1.1     | 2026-07-23 | Product | Renamed product to Enterprise AI Governance Layer; strengthened positioning, value proposition, and business impact; added Current/Future state and positioning refinements.                                 |
-| 0.2       | 2026-07-23 | Product | Added §2 Problem Analysis and §2a Regulatory & Compliance Landscape (research-grounded).                                                                                                                     |
-| 0.2.1     | 2026-07-23 | Product | §2 executive refinement: fragmentation diagram, executive-questions callout, scale narrative, categorized risks, decision-governance framing, stronger close.                                                |
-| 0.3       | 2026-07-23 | Product | Added §3 Product Vision (vision, mission, success signals, organizational transformation, goals, non-goals).                                                                                                 |
-| 0.3.1     | 2026-07-23 | Product | §3 executive refinement: Vision at a Glance, Current→Future table, strengthened mission, Vision Principles, goals/non-goals intros, memorable close. Renumbered subsections to 3.1–3.8.                      |
-| 0.4       | 2026-07-23 | Product | Added §4 Design Principles (P1–P10), each with statement, rationale, practice, trade-offs, and explicit rejections.                                                                                          |
-| 0.5       | 2026-07-23 | Product | Added §5 Scope: scope statement, in/out of scope by domain, responsibility matrix, worked boundary examples, summary — all traced to P1–P10.                                                                 |
-| 0.6       | 2026-07-23 | Product | Added §6 Stakeholders: philosophy, ten stakeholder groups, RACI matrix, objectives, collaboration model, summary.                                                                                            |
-| 0.7       | 2026-07-24 | Product | Added §7 Personas (five: developer, policy officer, ops engineer, audit analyst, administrator) + persona bridge matrix. Adopted revised structure: new §8 User Needs to follow, renumbering later sections. |
-| 0.8       | 2026-07-24 | Product | Added §8 User Needs: thirteen themed needs (UN-1–UN-13) with persona/principle/goal traceability and coverage verification.                                                                                  |
-| 0.9       | 2026-07-24 | Product | Added §9 Product Capabilities: twelve capabilities (CAP-1–CAP-12) across ten domains, with UN/persona/principle/goal traceability and coverage validation.                                                   |
-| 0.10      | 2026-07-24 | Product | Added §10 Functional Requirements: 34 testable requirements (FR-x.y) organized by capability, each with normative statement, source trace, priority, and acceptance criteria.                                |
-| 0.11      | 2026-07-24 | Product | Added §11 Product Features: nine features (F-1–F-9, Core/Enhanced) packaging all 34 FRs, with capability/persona traceability, priority, and FR→feature coverage validation.                                 |
-| 0.12      | 2026-07-24 | Product | Added §12 Release Strategy & Prioritization: release philosophy, MVP definition (F-1–F-8), MoSCoW table, deferred scope, and release validation.                                                             |
-| 0.13      | 2026-07-24 | Product | Added §13 Non-Functional Requirements: 26 NFRs across 10 quality attributes, technology-agnostic, with principle/goal traceability and coverage validation. Numeric targets marked as proposed defaults.     |
-| 0.14      | 2026-07-24 | Product | Added §14 Success Metrics & KPIs: 22 KPIs (M-1–M-22) across five dimensions, with goal/feature coverage validation. Unknown targets marked [TBD].                                                            |
-| 0.15      | 2026-07-24 | Product | Added §15 Risks, Assumptions & Dependencies: product & organizational risks (R-1–R-12), assumptions (A-1–A-8), external dependencies (D-1–D-6), mitigation summary, and coverage validation.                 |
-| 1.0-draft | 2026-07-24 | Product | Added §16 Product Roadmap & Future Evolution (evolution philosophy, near/medium/long-term, permanent principles, closing statement). First complete PRD draft.                                               |
-| 1.0       | 2026-07-24 | Product | Added Appendix A — End-to-End Requirements Traceability Matrix (goal/principle/capability/FR/feature/quality traceability + coverage checklist). No content changes to §§0–16.                               |
-
-### Reading guide
-
-This document is **product-focused**. It defines _why_ the product exists, _who_ uses it, and _what_ it must do. It deliberately excludes technology stack, data models, APIs, and architecture — those are specified in the Solution & System Design and later documents. Where an enforcement or design mechanism is implied, the PRD states the **requirement and outcome**, not the implementation.
-
-By design, this PRD captures **product intent** — the problem, the users, and the required capabilities. Architectural decisions are intentionally deferred: how governance is realized, enforced, and integrated is the responsibility of the **Solution & System Design** document that follows. Keeping these boundaries clear ensures the product requirements remain stable even as implementation approaches evolve.
-
----
-
 ## §1. Executive Summary
 
 ### 1.1 Problem overview
@@ -168,7 +112,7 @@ Enterprise software has passed through four eras and is entering a fifth. At eac
 
 **The inflection point.** For the first four eras, the set of actions software could take was **knowable in advance** — enumerable by a developer, reviewable by a risk officer. Agentic AI breaks that assumption. An agent's path is decided _at runtime_, by model inference, in response to context that did not exist when its permissions were granted. Governance can no longer be fully "designed in" beforehand; it must be **evaluated in the moment the action is attempted.**
 
-**So what?** Governance requirements did not grow linearly — they changed _in kind_ at the agentic step. In the first four eras the enterprise governed _software behavior_, which was designed in advance; from the agentic step onward it must govern _autonomous decisions_, which are made in the moment. The controls that served the first four eras assume determinism. The fifth era does not offer it.
+Governance requirements did not grow linearly — they changed _in kind_ at the agentic step. In the first four eras the enterprise governed _software behavior_, which was designed in advance; from the agentic step onward it must govern _autonomous decisions_, which are made in the moment. The controls that served the first four eras assume determinism. The fifth era does not offer it.
 
 ### 2.2 Current Enterprise Landscape
 
@@ -189,7 +133,7 @@ The result is **structural fragmentation**: governance exists, but it is duplica
 
 **The real challenge is scale, not any single agent.** Governing one autonomous agent is tractable — a capable team can wrap it in sensible controls. The enterprise problem is different in nature: it is governing **hundreds or thousands of independently developed agents**, spanning payments, servicing, collections, and fraud, each making consequential decisions on its own — while holding them all to **one consistent enterprise governance model**. Fragmentation is manageable at three agents and unmanageable at three hundred. The controls do not fail because any team was careless; they fail because there is no shared standard for the decisions those agents make.
 
-**So what?** This is not a failure of any one team; it is the predictable outcome of solving a shared problem privately. Every new agent multiplies the surface area and the inconsistency. The problem compounds precisely as adoption accelerates — and industry surveys indicate most institutions are still early, running pilots rather than production fleets. **The cheapest time to standardize governance is before the fleet exists, not after.**
+This is not a failure of any one team; it is the predictable outcome of solving a shared problem privately. Every new agent multiplies the surface area and the inconsistency. The problem compounds precisely as adoption accelerates — and industry surveys indicate most institutions are still early, running pilots rather than production fleets. **The cheapest time to standardize governance is before the fleet exists, not after.**
 
 #### Today's fragmented enterprise
 
@@ -252,7 +196,7 @@ The enterprise already owns a mature control stack. These controls are not wrong
 
 **The common thread.** Every one of these controls answers a _design-time_ question: _is this identity known, is this role allowed, is this request well-formed?_ Autonomous agents pose a _runtime_ question: _given who this agent is, what it is trying to do, and how risky that is right now — should this specific action proceed?_ No existing control answers that question as a **shared, consistent, auditable enterprise service.**
 
-**So what?** The gap is not a missing feature in any one tool. It is a missing _layer_ — one that sits between the agent and the action and makes a governed decision every time.
+The gap is not a missing feature in any one tool. It is a missing _layer_ — one that sits between the agent and the action and makes a governed decision every time.
 
 ### 2.4 Emerging Risks
 
@@ -287,7 +231,7 @@ When decision-making moves into software that acts on its own, the risks are not
 | ----------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | **Erosion of customer trust** | Customer harm from wrong or inappropriate automated decisions damages the franchise | A customer receives an incorrect **financial communication** or has **data retrieved** inappropriately |
 
-**So what?** Each risk is individually familiar to a risk officer. What is new is that they now arise _from software making decisions on its own, continuously, at scale_ — and no current mechanism addresses them consistently across every agent's decisions at once.
+Each risk is individually familiar to a risk officer. What is new is that they now arise _from software making decisions on its own, continuously, at scale_ — and no current mechanism addresses them consistently across every agent's decisions at once.
 
 ### 2.5 Opportunity
 
@@ -1042,7 +986,7 @@ This matrix condenses the five personas into the dimensions that feed the rest o
 | **Compliance / Audit Analyst**        | Prove controls work                    | Reconstruct and explain any decision         | P5, P6, P7         | Reproducible record; explanations; accountable owner   |
 | **Governance Platform Administrator** | Onboard, own, and scope agents         | Every agent owned and least-privileged       | P1, P2, P3, P7     | Central onboarding; ownership; least-privilege scoping |
 
-**So what?** Five personas, five distinct interaction models, one shared capability. Their needs overlap in revealing ways — the developer's _"why was this denied?"_ and the analyst's _"reconstruct this decision"_ both trace to the same reproducibility and explainability principles. §8 synthesizes these persona-level needs into themed **user needs**, deliberately organized by theme rather than by person, so that shared needs are stated once — and become the direct input to product capabilities and requirements.
+Five personas, five distinct interaction models, one shared capability. Their needs overlap in revealing ways — the developer's _"why was this denied?"_ and the analyst's _"reconstruct this decision"_ both trace to the same reproducibility and explainability principles. §8 synthesizes these persona-level needs into themed **user needs**, deliberately organized by theme rather than by person, so that shared needs are stated once — and become the direct input to product capabilities and requirements.
 
 ---
 
@@ -1193,16 +1137,6 @@ Each need is written from the user's perspective and traced to the personas it s
 - **Product goals.** G2.
 
 ---
-
-### 8.1 Coverage verification
-
-Confirming the internal traceability model holds before these needs feed §9 (the full traceability matrix is deferred, per plan):
-
-- **Every persona contributes ≥ 1 need.** Developer → UN-1, 5, 9, 10, 12; Risk/Policy Officer → UN-2, 3, 6, 8, 13; Operations Engineer → UN-4, 8, 13; Audit Analyst → UN-5, 6, 7; Platform Administrator → UN-1, 7, 9, 11, 12. ✓
-- **Every product goal (G1–G6) is supported.** G1 → UN-1, 2, 8; G2 → UN-3, 12, 13; G3 → UN-5, 6, 7; G4 → UN-4, 8; G5 → UN-9, 10, 11, 12; G6 → UN-2, 11. ✓
-- **Every design principle (P1–P10) is reflected.** P1 → UN-1, 9, 12; P2 → UN-1, 8, 11; P3 → UN-1, 2, 11; P4 → UN-3, 12; P5 → UN-2, 6; P6 → UN-5; P7 → UN-7, 11; P8 → UN-4, 13; P9 → UN-4, 8; P10 → UN-10. ✓
-
-Nothing is orphaned and nothing important is missing. **So what?** These thirteen needs are the complete, deduplicated demand the product must satisfy. §9 turns each into one or more **product capabilities** — still implementation-agnostic — which §10 then formalizes as testable functional requirements.
 
 ---
 
@@ -1363,16 +1297,6 @@ _(Field format per capability: **Purpose** · **User Needs** · **Personas** · 
 - **Success Definition.** A new agent can be brought under governance quickly and consistently, inheriting policy, risk, and audit without team-specific rework, while retaining ownership of its own decisions.
 
 ---
-
-### 9.1 Coverage validation
-
-Verifying the traceability chain holds before capabilities feed §10 Functional Requirements:
-
-- **Every user need (UN-1–UN-13) maps to ≥ 1 capability.** UN-1 → CAP-1, CAP-8; UN-2 → CAP-2; UN-3 → CAP-3, CAP-4; UN-4 → CAP-10; UN-5 → CAP-5; UN-6 → CAP-6; UN-7 → CAP-6, CAP-7; UN-8 → CAP-11; UN-9 → CAP-12; UN-10 → CAP-1, CAP-12; UN-11 → CAP-8, CAP-9; UN-12 → CAP-12; UN-13 → CAP-3, CAP-4. ✓
-- **Every capability supports ≥ 1 product goal.** CAP-1 → G1,G2; CAP-2 → G6,G1; CAP-3 → G2; CAP-4 → G2,G3; CAP-5 → G3; CAP-6 → G3; CAP-7 → G3; CAP-8 → G5,G6; CAP-9 → G5,G6; CAP-10 → G4; CAP-11 → G4,G1; CAP-12 → G5. ✓
-- **No capability exists without a supporting user need.** All twelve cite at least one UN. ✓ (And every goal G1–G6 and principle P1–P10 is carried by ≥ 1 capability.)
-
-**So what?** These twelve capabilities are the complete, stable set of business abilities the product must possess. §10 decomposes each into testable **functional requirements (FR-n)**, carrying the CAP → FR trace so every requirement remains anchored to a need, a persona, a principle, and a goal.
 
 ---
 
@@ -1677,16 +1601,6 @@ _Per requirement: **Statement** · **Purpose** · **Source** (CAP · UN · P · 
 
 ---
 
-### 10.13 Coverage validation
-
-Verifying the requirement layer before it feeds §11 (Feature List):
-
-- **Every capability has ≥ 1 functional requirement.** CAP-1 → FR-1.1–1.4; CAP-2 → FR-2.1–2.4; CAP-3 → FR-3.1–3.3; CAP-4 → FR-4.1–4.3; CAP-5 → FR-5.1–5.2; CAP-6 → FR-6.1–6.3; CAP-7 → FR-7.1–7.2; CAP-8 → FR-8.1–8.3; CAP-9 → FR-9.1–9.3; CAP-10 → FR-10.1–10.3; CAP-11 → FR-11.1–11.3; CAP-12 → FR-12.1–12.2. ✓
-- **Every requirement traces to exactly one primary capability.** Each FR-x.y is filed under a single capability. ✓
-- **No requirement exists without a supporting user need.** Every FR cites at least one UN. ✓
-
-**Count:** 34 functional requirements across 12 capabilities. **So what?** Each is testable, singular, and anchored end-to-end to a need, principle, and goal. §11 groups these requirements into user-facing **features**, and §12 prioritizes them with MoSCoW.
-
 ---
 
 ## §11. Product Features
@@ -1810,33 +1724,6 @@ _Per feature: **Purpose** · **Functional Requirements Implemented** · **Capabi
 
 ---
 
-### 11.1 Coverage validation
-
-Verifying the feature layer before it feeds §12 (Prioritization):
-
-- **Every functional requirement belongs to ≥ 1 feature.**
-
-| Feature | Functional requirements                                                |
-| ------- | ---------------------------------------------------------------------- |
-| F-1     | FR-12.1, FR-12.2                                                       |
-| F-2     | FR-1.1, FR-1.2, FR-1.3, FR-1.4, FR-3.2, FR-5.1, FR-5.2, FR-9.2, FR-9.3 |
-| F-3     | FR-2.1, FR-2.2, FR-2.3, FR-2.4                                         |
-| F-4     | FR-3.1, FR-3.3                                                         |
-| F-5     | FR-4.1, FR-4.2, FR-4.3                                                 |
-| F-6     | FR-6.1, FR-6.2, FR-6.3, FR-7.2                                         |
-| F-7     | FR-7.1, FR-8.1, FR-8.2, FR-8.3, FR-9.1                                 |
-| F-8     | FR-10.1, FR-10.2, FR-10.3                                              |
-| F-9     | FR-11.1, FR-11.2, FR-11.3                                              |
-
-All 34 requirements (FR-1.1 through FR-12.2) appear. ✓
-
-- **Every feature implements ≥ 1 functional requirement.** All nine features list FRs. ✓
-- **No feature exists without supporting functional requirements.** None. ✓
-
-**So what?** Nine features — eight forming the non-negotiable governance guarantee, one adding enterprise-wide visibility — package 34 requirements into functionality a stakeholder can reason about. §12 applies MoSCoW across these features (and the finer-grained Should-Have FRs within them) to define what the first release must deliver.
-
----
-
 ## §12. Release Strategy & Prioritization
 
 This section defines **what ships first, what is deferred, and why.** MoSCoW prioritization is one component of it — the decision is framed by a release philosophy, an explicit MVP definition, and a validation that the cut is coherent. Everything remains at the product level: no schedules, no engineering sequencing, no architecture.
@@ -1922,8 +1809,6 @@ Confirming the cut is coherent — that Must is truly minimal and Should is trul
 Each removal violates at least one design principle and defeats at least one product goal — confirming the Must set is **minimal** (nothing removable) and **sufficient** (together they deliver the guarantee).
 
 **Every Should item improves value without breaking the guarantee.** F-9 and the finer-grained Shoulds (FR-3.3, FR-5.2, FR-8.3, FR-11.2/11.3) each add oversight, precision, or consistency; removing any of them leaves every individual decision still governed, explained, recorded, and containable. This is the test of a correct Should: **its absence is felt in efficiency and breadth, never in trust.**
-
-**So what?** Release 1 is a narrow, complete, defensible governance capability — the eight-feature path a decision travels — with enterprise visibility and refinements layered on as Should. §13 now shows how that capability behaves as a flow, from the business perspective.
 
 ---
 
@@ -2145,18 +2030,6 @@ _Per NFR: **Statement** · **Purpose** · **Principles** · **Goals** · **Prior
 
 ---
 
-### 13.11 Coverage validation
-
-Verifying the quality layer before it feeds later sections:
-
-- **Every product goal (G1–G6) is supported by ≥ 1 NFR.** G1 → NFR-1.1, 1.2, 1.3, 2.2, 5.2, 7.1, 7.2, 9.2, 10.2; G2 → NFR-2.1, 7.1, 9.3; G3 → NFR-1.2, 3.2, 4.1, 4.2, 4.3, 5.1, 5.2, 5.3, 6.1, 6.2, 7.2; G4 → NFR-7.3, 8.1, 8.2; G5 → NFR-2.1, 2.3, 8.3, 9.2, 10.1; G6 → NFR-3.2, 9.1. ✓
-- **Every design principle (P1–P10) is reinforced by ≥ 1 NFR.** P1 → NFR-1.1, 1.3, 3.1, 8.3, 10.1, 10.2; P2 → NFR-3.1, 3.3; P3 → NFR-3.1, 9.1; P4 → NFR-2.1, 9.3; P5 → NFR-1.2, 4.1, 4.2, 5.1, 5.2, 6.2, 7.2, 9.1; P6 → NFR-4.1, 6.1, 6.2, 8.2; P7 → NFR-3.1, 3.2, 3.3, 4.3, 5.1; P8 → NFR-1.1, 1.2, 1.3, 7.1, 7.2, 7.3, 10.2; P9 → NFR-7.3, 8.1, 8.2; P10 → NFR-10.1. ✓
-- **No NFR duplicates a functional requirement.** Each states a quality (how well) and, where adjacent to an FR, references rather than repeats it (e.g., NFR-9.1 references FR-2.3's propagation behavior without restating it). ✓
-
-**Count:** 26 non-functional requirements across 10 quality attributes. **So what?** These are the qualities that make the governance capability _enterprise-ready_ — available on the critical path, fast enough not to throttle, fail-safe under stress, provably auditable, and consistently integrable — independent of any technology choice. §14 now depicts the product as business-level workflows.
-
----
-
 ## §14. Success Metrics & KPIs
 
 This section answers one question: **how will we know this product is successful?** It is a product-management view, not telemetry — every metric here is understandable by product, engineering, risk, and executive leadership without reading an implementation document. It deliberately excludes infrastructure and system-health signals (CPU, memory, storage, cloud utilization); those belong to operations, not to the definition of product success.
@@ -2367,18 +2240,6 @@ _(These track the ongoing reality against the §13 NFR targets; the NFR defines 
 
 ---
 
-### 14.6 Coverage validation
-
-Verifying that success is measurable and complete:
-
-- **Every product goal (G1–G6) is measured by ≥ 1 KPI.** G1 → M-1, 4, 5, 6, 7, 11, 15, 21; G2 → M-8, 9, 10, 21; G3 → M-14, 15, 16, 17, 18; G4 → M-12, 13; G5 → M-1, 2, 3, 19, 20, 22; G6 → M-6, 17. ✓
-- **Every core feature (F-1–F-8) contributes to ≥ 1 KPI.** F-1 → M-1, 3, 19, 20; F-2 → M-4, 5, 10; F-3 → M-6, 17; F-4 → M-8, 9; F-5 → M-8, 9; F-6 → M-14, 15, 16, 18; F-7 → M-2, 3, 7; F-8 → M-12, 13. ✓
-- **Success is evaluable without any implementation document.** Every metric is a product/business outcome, not a system-health signal. ✓
-
-**Count:** 22 KPIs across five dimensions. **So what?** Success is now defined the way leadership will judge it — adoption, effectiveness, operability, defensibility, and business acceleration — each tied to a goal and a core feature, each expressed as a target trajectory rather than an invented number. The `[TBD]` targets are consolidated as open items in §Assumptions / §Open Questions.
-
----
-
 ## §15. Risks, Assumptions & Dependencies
 
 This is a **product** risk assessment — what could prevent the product from succeeding as a product, not how it might fail in build. It documents the risks to adoption and trust, the assumptions the product rests on, and the external systems it depends on. Nothing here concerns engineering, scheduling, or architecture.
@@ -2449,14 +2310,6 @@ Product-level mitigations for the most material risks. Owners are the accountabl
 | **R-9 Governance bypass**         | Enforce externality — an unregistered agent cannot act as governed (FR-8.1); reinforce with mandate   | Determined bypass outside the product's control | Governance Platform Team; Executive Leadership |
 | **R-10 Poor policy quality**      | Policy versioning and review; separation of duties (NFR-3.3)                                          | Policy remains a human-judgment dependency      | Risk & Compliance                              |
 | **R-11 No executive sponsorship** | Frame governance as the enabler of AI adoption, tied to business impact metrics (M-19–M-22)           | Sponsorship may lag adoption ambition           | Executive Leadership                           |
-
-### 15.6 Coverage validation
-
-- **Every product goal (G1–G6) has ≥ 1 identified risk.** G1 → R-3, R-4, R-9; G2 → R-2, R-3, R-7; G3 → R-6, R-8; G4 → R-4, R-9; G5 → R-1, R-2, R-11, R-12; G6 → R-5, R-10, R-12. ✓
-- **Every assumption is referenced earlier in the PRD.** A-1 §2.1; A-2 §2a; A-3 §5/NFR-3.1; A-4 §5/CAP-3; A-5 §7/§12; A-6 §6/P7; A-7 §5/CAP-12; A-8 §10. ✓
-- **Every dependency already exists in prior sections.** All of D-1–D-6 appear in the §5 responsibility matrix and/or §6. ✓ No new concepts introduced.
-
-**So what?** The product's success rests on adoption and trust more than on any single feature — and the largest risks (false trust, bypass, over/under-governance) are governance risks, not build risks. The mitigations are product decisions already embedded in earlier sections (P4, P8, F-1, F-5, F-8, M-5, M-9), which is why they are credible rather than aspirational.
 
 ---
 
@@ -2534,11 +2387,6 @@ The Enterprise AI Governance Layer is not intended to become another AI platform
 
 The deeper point is the one this document has returned to throughout. **This product is not about governing AI. It is about governing autonomous financial decisions** — the moments when software, acting on the institution's behalf, moves money, changes a customer's standing, or speaks in the institution's name. As those moments multiply, the enterprise's task is not to make each agent individually trustworthy, one at a time, forever. It is to ensure that **every autonomous decision — no matter which agent makes it, no matter what it is — passes through a single trusted place before it can take effect.** That place is the product. That is the whole idea, and it is the idea that must remain true no matter how far the product grows.
 
-### 16.7 Roadmap validation
-
-- **Every future direction aligns with the design principles.** None requires weakening P1–P10; advisory capabilities (AI-assisted authoring, optimization) explicitly preserve human accountability (P7) and the _whether-not-what_ boundary (P10).
-- **No near/medium-term direction violates Scope (§5).** Near- and medium-term items stay within first-party governance of autonomous decisions. Long-term expansions (all enterprise AI, third-party/partner agents) are flagged as _deliberate future scope extensions_, consistent with the §3.8 non-goals' stated future paths — not contradictions of Release 1 scope.
-- **The roadmap naturally extends Release 1.** Each item deepens or widens an existing capability (CAP/F reference given), rather than introducing a new foundation. ✓
 
 ---
 
@@ -2678,23 +2526,6 @@ _Every feature has ≥ 1 KPI — the product is measurable end to end._
 | Maintainability & Extensibility | NFR-9.1, NFR-9.2, NFR-9.3 | M-3, M-20                          |
 | Interoperability & Integration  | NFR-10.1, NFR-10.2        | M-1, M-2                           |
 
-### A.7 Coverage validation checklist
-
-Automated-style verification against the matrices above:
-
-- ✓ **Every Goal maps to ≥ 1 Principle** — G1–G6 each list principles (A.1).
-- ✓ **Every Principle maps to ≥ 1 User Need** — P1–P10 each list needs (A.2).
-- ✓ **Every User Need maps to ≥ 1 Capability** — UN-1–UN-13 covered (§9.1 validation).
-- ✓ **Every Capability maps to ≥ 1 Functional Requirement** — CAP-1–CAP-12 each have FRs (A.3, §10.13).
-- ✓ **Every Functional Requirement belongs to ≥ 1 Feature** — all 34 FRs mapped (A.4, §11.1).
-- ✓ **Every Feature has ≥ 1 KPI** — F-1–F-9 each list KPIs (A.5).
-- ✓ **Every Goal is measurable** — G1–G6 each list KPIs (A.1, §14.6).
-- ✓ **Every Goal has ≥ 1 identified risk** — G1–G6 covered (§15.6).
-- ✓ **Every Goal has ≥ 1 supporting NFR** — via principle/attribute mapping (A.2, A.6, §13.11).
-- ✓ **No orphaned artifacts** — every UN, CAP, FR, F, NFR, and M resolves upward to a Goal and downward to a measure; no ID appears without a link on both sides.
-
-**Result: traceability is complete and closed.** Every requirement in this PRD can be followed from a business goal down to a measurable outcome, and back — which is exactly what an enterprise architecture review requires.
-
 ---
 
-_End of Product Requirements Document (v1.0-draft). Appendix A is the final section. The `[TBD]` metric/NFR targets and the §15 assumptions are the first decision inputs for the Solution & System Design document that follows._
+_End of Product Requirements Document (v1.0)._
