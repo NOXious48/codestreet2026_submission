@@ -1,0 +1,486 @@
+<style>
+  :root{
+    --bg:#04060C; --ink:#F3F7FF; --muted:#93A4C6; --faint:#54648A;
+    --accent:#4EA6FF; --accent2:#2E86E6; --accent3:#006FCF;
+    --allow:#37C08A; --esc:#E6B24A; --deny:#F0705A;
+    --glass:rgba(255,255,255,.05); --glass2:rgba(255,255,255,.025);
+    --brd:rgba(255,255,255,.11); --brd2:rgba(255,255,255,.06);
+    --sans:"Helvetica Neue",Helvetica,Arial,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono",Consolas,monospace;
+    --ease:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow:hidden;height:100vh}
+
+  /* ── ambient, act-differentiated ── */
+  .amb{position:fixed;inset:0;z-index:0;pointer-events:none;transition:background 1.2s var(--ease);
+    background:radial-gradient(58vw 58vw at 28% 16%, rgba(38,86,168,.16), transparent 62%), #04060C;}
+  body[data-act="1"] .amb{background:radial-gradient(52vw 52vw at 26% 14%, rgba(40,80,150,.14), transparent 62%),#04060C}
+  body[data-act="2"] .amb{background:radial-gradient(60vw 60vw at 24% 12%, rgba(46,134,230,.22), transparent 62%),radial-gradient(46vw 46vw at 88% 92%, rgba(46,134,230,.10), transparent 60%),#04060C}
+  body[data-act="3"] .amb{background:radial-gradient(70vw 62vw at 50% 8%, rgba(46,134,230,.30), transparent 60%),radial-gradient(50vw 50vw at 86% 96%, rgba(78,166,255,.14), transparent 60%),#050912}
+  body[data-act="4"] .amb{background:radial-gradient(58vw 58vw at 26% 14%, rgba(46,134,230,.18), transparent 62%),radial-gradient(48vw 48vw at 82% 90%, rgba(55,192,138,.10), transparent 60%),#04070E}
+  body[data-act="5"] .amb{background:radial-gradient(70vw 60vw at 50% 4%, rgba(124,192,255,.24), transparent 60%),radial-gradient(50vw 50vw at 80% 96%, rgba(78,166,255,.14), transparent 62%),#060B16}
+  body.tense .amb{background:radial-gradient(50vw 50vw at 50% 30%, rgba(200,70,60,.12), transparent 60%),radial-gradient(40vw 40vw at 20% 80%, rgba(40,60,110,.14), transparent 60%),#05060B}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5;
+    background-image:linear-gradient(rgba(255,255,255,.014) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);
+    background-size:66px 66px;mask-image:radial-gradient(120vw 120vh at 50% 42%,#000,transparent 76%)}
+
+  /* ── stage ── */
+  .deck{position:relative;z-index:2;height:100vh}
+  .slide{position:absolute;inset:0;display:grid;place-items:center;opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .5s var(--ease);padding:5vh 4vw}
+  .slide.active{opacity:1;visibility:visible;pointer-events:auto}
+  .canvas{position:relative;width:min(93vw,calc(88vh*16/9));aspect-ratio:16/9;container-type:size;
+    display:flex;flex-direction:column;justify-content:center}
+  .center{align-items:center;text-align:center}
+
+  /* ── reveal motion ── */
+  .step{opacity:0;transform:translateY(2.6cqh);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .slide.active .step{opacity:1;transform:none}
+  .slide.active .s1{transition-delay:.08s}.slide.active .s2{transition-delay:.26s}
+  .slide.active .s3{transition-delay:.46s}.slide.active .s4{transition-delay:.66s}
+  .slide.active .s5{transition-delay:.86s}.slide.active .s6{transition-delay:1.06s}
+  @media(prefers-reduced-motion:reduce){.step{transition:none;opacity:1;transform:none}.draw{transition:none;stroke-dashoffset:0!important}}
+
+  /* ── typography ── */
+  .eyebrow{font-size:1.05cqw;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);
+    margin-bottom:2.6cqh;display:flex;gap:1.1cqw;align-items:center}
+  .eyebrow::before{content:"";width:2.4cqw;height:2px;background:linear-gradient(90deg,var(--accent),transparent)}
+  h1{font-size:7.2cqw;line-height:.98;letter-spacing:-.035em;font-weight:800;max-width:15ch;text-wrap:balance}
+  h2{font-size:4.9cqw;line-height:1.02;letter-spacing:-.028em;font-weight:800;max-width:19ch;text-wrap:balance}
+  .huge{font-size:9.4cqw;line-height:.95;letter-spacing:-.04em;font-weight:800}
+  .sub{font-size:1.75cqw;line-height:1.4;color:var(--muted);max-width:46ch;margin-top:2.8cqh;font-weight:400}
+  .grad{background:linear-gradient(100deg,#9FCBFF,var(--accent) 42%,var(--accent3));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .q{font-size:6.4cqw;line-height:1.04;letter-spacing:-.03em;font-weight:800;max-width:18ch}
+
+  .chips{display:flex;gap:1.5cqw;margin-top:3.6cqh}
+  .chip{font-size:1.15cqw;font-weight:700;letter-spacing:.08em;padding:1.05cqh 1.7cqw;border-radius:999px;border:1.5px solid;display:inline-flex;gap:.9cqw;align-items:center}
+  .chip::before{content:"";width:1.1cqw;height:1.1cqw;border-radius:50%}
+  .chip.a{color:var(--allow);border-color:color-mix(in srgb,var(--allow) 55%,transparent)}.chip.a::before{background:var(--allow);box-shadow:0 0 12px var(--allow)}
+  .chip.e{color:var(--esc);border-color:color-mix(in srgb,var(--esc) 55%,transparent)}.chip.e::before{background:var(--esc);box-shadow:0 0 12px var(--esc)}
+  .chip.d{color:var(--deny);border-color:color-mix(in srgb,var(--deny) 55%,transparent)}.chip.d::before{background:var(--deny);box-shadow:0 0 12px var(--deny)}
+
+  .split{display:grid;grid-template-columns:1.02fr .98fr;gap:4cqw;align-items:center;width:100%}
+  .split.w{grid-template-columns:.86fr 1.14fr}
+
+  .cards{display:grid;gap:1.7cqw;width:100%;margin-top:3.4cqh}
+  .cards.c3{grid-template-columns:repeat(3,1fr)}.cards.c4{grid-template-columns:repeat(4,1fr)}
+  .card{padding:2.5cqw;border-radius:16px;background:var(--glass);border:1px solid var(--brd);backdrop-filter:blur(14px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 30px 60px -34px rgba(0,0,0,.8)}
+  .card .k{font-family:var(--mono);font-size:1cqw;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+  .card h3{font-size:1.7cqw;margin:1.3cqh 0 .8cqh;letter-spacing:-.012em;font-weight:700}
+  .card p{font-size:1.12cqw;line-height:1.45;color:var(--muted)}
+
+  .figwrap{margin-top:1cqh}
+  svg.dg{width:100%;height:auto;overflow:visible}
+  .nd{fill:var(--glass);stroke:var(--brd);stroke-width:1.5}
+  .nd.acc{fill:rgba(46,134,230,.16);stroke:var(--accent)}
+  .nd.amber{fill:rgba(230,178,74,.12);stroke:var(--esc)}
+  .glow{filter:drop-shadow(0 0 10px rgba(78,166,255,.55))}
+  .tx{fill:var(--ink);font-family:var(--sans);font-weight:600}
+  .txs{fill:var(--muted);font-family:var(--mono);letter-spacing:.16em}
+  .ln{stroke:var(--faint);stroke-width:2;fill:none}
+  .ln.acc{stroke:var(--accent)} .ln.amber{stroke:var(--esc)} .ln.g{stroke:var(--allow)} .ln.r{stroke:var(--deny)}
+  .draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.05s var(--ease)}
+  .slide.active .draw{stroke-dashoffset:0}
+  .pop{opacity:0;transition:opacity .6s var(--ease)}
+  .slide.active .pop{opacity:1}
+  .p1{transition-delay:.15s}.p2{transition-delay:.35s}.p3{transition-delay:.55s}.p4{transition-delay:.75s}.p5{transition-delay:.95s}.p6{transition-delay:1.15s}.p7{transition-delay:1.35s}.p8{transition-delay:1.55s}
+
+  /* ── chrome ── */
+  .prog{position:fixed;top:0;left:0;height:3px;z-index:8;background:linear-gradient(90deg,var(--accent),var(--accent3));width:0;transition:width .5s var(--ease)}
+  .num{position:fixed;right:2.2vw;bottom:2.2vh;z-index:8;font-family:var(--mono);font-size:13px;letter-spacing:.12em;color:var(--muted)}
+  .num b{color:var(--ink)}
+  .wm{position:fixed;left:2.2vw;bottom:2.2vh;z-index:8;font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--faint);text-transform:uppercase}
+  .nav{position:fixed;right:2.2vw;top:2.1vh;z-index:8;display:flex;gap:8px}
+  .nav button{width:34px;height:34px;border-radius:50%;background:var(--glass);border:1px solid var(--brd);color:var(--ink);
+    font-size:15px;cursor:pointer;backdrop-filter:blur(8px);transition:.2s}
+  .nav button:hover{background:rgba(78,166,255,.18);border-color:var(--accent)}
+  .nav button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @media print{
+    body{overflow:visible;height:auto}
+    .amb{position:absolute}.grain,.prog,.num,.wm,.nav{display:none}
+    .deck{height:auto}
+    .slide{position:relative;inset:auto;opacity:1;visibility:visible;height:100vh;page-break-after:always;break-after:page}
+    .step,.pop{opacity:1;transform:none}.draw{stroke-dashoffset:0}
+    @page{size:landscape}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+
+<div class="amb"></div><div class="grain"></div>
+<div class="prog" id="prog"></div>
+<div class="nav"><button id="prev" aria-label="Previous">‹</button><button id="next" aria-label="Next">›</button></div>
+<div class="wm">Governance Layer</div>
+<div class="num" id="num"><b>01</b> / 18</div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 COVER · Act I · Notes: Open calm. Hold on the title. This is the trust layer for autonomous finance. -->
+  <section class="slide active" data-act="1"><div class="canvas"><div class="split">
+    <div>
+      <p class="eyebrow step s1">American Express · CodeStreet 2026</p>
+      <h1 class="step s2">The <span class="grad">trust layer</span> for autonomous finance.</h1>
+      <p class="sub step s3">One place to govern every autonomous decision — before it can move money.</p>
+      <div class="chips step s4"><span class="chip a">ALLOW</span><span class="chip e">ESCALATE</span><span class="chip d">DENY</span></div>
+    </div>
+    <div class="step s3">
+      <svg class="dg" viewBox="0 0 300 300" aria-label="An agent request passing a governance gate to a verdict">
+        <defs><radialGradient id="g1" cx="50%" cy="44%" r="60%"><stop offset="0" stop-color="#2E86E6" stop-opacity=".6"/><stop offset="1" stop-color="#2E86E6" stop-opacity="0"/></radialGradient></defs>
+        <circle cx="150" cy="140" r="120" fill="url(#g1)"/>
+        <rect class="nd pop p1" x="10" y="122" width="70" height="42" rx="10"/><circle class="pop p1" cx="30" cy="143" r="7" fill="var(--accent)"/><rect class="pop p1" x="44" y="138" width="26" height="5" rx="2.5" fill="var(--muted)"/>
+        <path class="ln acc draw p2" pathLength="1" d="M80 143 H120" marker-end="url(#am1)"/>
+        <path class="nd acc glow pop p2" d="M150 46 L226 74 V162 C226 222 190 258 150 276 C110 258 74 222 74 162 V74 Z"/>
+        <text x="150" y="150" text-anchor="middle" class="tx pop p3" font-size="19" letter-spacing="3">PDP</text>
+        <text x="150" y="174" text-anchor="middle" class="txs pop p3" font-size="9">GOVERN</text>
+        <g stroke-width="3" fill="none"><path class="draw p4" pathLength="1" d="M226 112 h48" stroke="var(--allow)"/><path class="draw p5" pathLength="1" d="M226 150 h48" stroke="var(--esc)"/><path class="draw p6" pathLength="1" d="M226 188 h48" stroke="var(--deny)"/></g>
+        <g><circle class="pop p4" cx="280" cy="112" r="6" fill="var(--allow)"/><circle class="pop p5" cx="280" cy="150" r="6" fill="var(--esc)"/><circle class="pop p6" cx="280" cy="188" r="6" fill="var(--deny)"/></g>
+        <defs><marker id="am1" markerWidth="10" markerHeight="10" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--accent)"/></marker></defs>
+      </svg>
+    </div>
+  </div></div></section>
+
+  <!-- 2 THE SHIFT · Act I · Notes: The sentence the whole talk hangs on. Two beats — let the second land. -->
+  <section class="slide" data-act="1"><div class="canvas center">
+    <p class="eyebrow step s1" style="justify-content:center">The shift</p>
+    <h2 class="step s2" style="max-width:24ch">AI stopped advising.</h2>
+    <h2 class="step s4" style="max-width:24ch">It started <span class="grad">acting.</span></h2>
+    <p class="sub step s5" style="margin-left:auto;margin-right:auto">Refunds. Limit changes. Payments — now taken by software, at machine speed.</p>
+  </div></section>
+
+  <!-- 3 THE STAKES · Act I · Notes: Slow down. The checkpoint that always enforced policy has quietly disappeared. -->
+  <section class="slide" data-act="1"><div class="canvas center">
+    <p class="eyebrow step s1" style="justify-content:center">What that removed</p>
+    <h1 class="step s2" style="margin-inline:auto">The human checkpoint is <span class="grad">gone.</span></h1>
+    <div class="step s3 figwrap" style="max-width:34%;margin-inline:auto">
+      <svg class="dg" viewBox="0 0 320 120" aria-label="A broken checkpoint gate">
+        <path class="ln" pathLength="1" d="M20 90 H300" stroke-width="2"/>
+        <g class="ln acc" stroke-width="3" fill="none"><path class="draw p1" pathLength="1" d="M70 90 V36 H120"/><path class="draw p2" pathLength="1" d="M250 90 V36 H200"/></g>
+        <path class="ln r draw p3" pathLength="1" stroke-dasharray="4 7" d="M130 36 H190" stroke-width="3"/>
+        <text x="160" y="24" text-anchor="middle" class="txs" font-size="9" fill="var(--deny)">OPEN</text>
+      </svg>
+    </div>
+    <p class="sub step s4" style="margin-inline:auto">Agents move money with no one watching the decision.</p>
+  </div></section>
+
+  <!-- 4 ENTERPRISE REALITY · Act I · Notes: Every team responsibly builds its own guardrails. Multiply by hundreds and you get fragmentation nobody can see across. -->
+  <section class="slide" data-act="1"><div class="canvas">
+    <p class="eyebrow step s1">The enterprise reality</p>
+    <h2 class="step s2">Governance is built <span class="grad">per agent</span> — not per enterprise.</h2>
+    <div class="step s3 figwrap">
+      <svg class="dg" viewBox="0 0 1000 210" aria-label="Fragmented per-team governance converging on a fractured node">
+        <g class="tx" font-size="16" text-anchor="middle">
+          <rect class="nd pop p1" x="60" y="20" width="200" height="46" rx="11"/><text x="160" y="49">Payments</text>
+          <rect class="nd pop p2" x="400" y="20" width="200" height="46" rx="11"/><text x="500" y="49">Servicing</text>
+          <rect class="nd pop p3" x="740" y="20" width="200" height="46" rx="11"/><text x="840" y="49">Fraud</text>
+        </g>
+        <g class="txs" font-size="11" text-anchor="middle" fill="var(--faint)"><text class="pop p2" x="160" y="104">own policy · risk · audit</text><text class="pop p3" x="500" y="104">own policy · risk · audit</text><text class="pop p4" x="840" y="104">own policy · risk · audit</text></g>
+        <g class="ln" stroke="var(--faint)" stroke-dasharray="4 7"><path class="draw p4" pathLength="1" d="M160 112 C160 150 420 150 470 165"/><path class="draw p5" pathLength="1" d="M500 112 V162"/><path class="draw p6" pathLength="1" d="M840 112 C840 150 580 150 530 165"/></g>
+        <rect class="nd amber pop p6" x="360" y="164" width="280" height="38" rx="10" stroke="var(--deny)"/><text x="500" y="188" text-anchor="middle" class="tx" font-size="15" fill="var(--deny)">Fragmented governance</text>
+      </svg>
+    </div>
+    <p class="sub step s5">Manageable at three agents. Unmanageable at three hundred.</p>
+  </div></section>
+
+  <!-- 5 THE QUESTION · Act I · tension peak · Notes: Pause. Ask the room. This is the question a CRO cannot answer today. -->
+  <section class="slide" data-act="1"><div class="canvas center">
+    <p class="eyebrow step s1" style="justify-content:center">The question no one can answer</p>
+    <p class="q grad step s2" style="margin-inline:auto">“Which agents can move money right now?”</p>
+    <p class="sub step s4" style="margin-inline:auto;color:var(--faint);font-family:var(--mono);letter-spacing:.08em">TODAY, THE HONEST ANSWER IS — NOBODY KNOWS.</p>
+  </div></section>
+
+  <!-- 6 VISION · Act II · Notes: Reframe fear into ambition. We are not adding a brake — we make 'yes' to autonomous AI safe. -->
+  <section class="slide" data-act="2"><div class="canvas"><div class="split w">
+    <div>
+      <p class="eyebrow step s1">The vision</p>
+      <h2 class="step s2">Autonomous finance, <span class="grad">trusted by default.</span></h2>
+      <p class="sub step s3">Any team can deploy an agent that acts — and every decision is already governed, explainable, and accountable.</p>
+    </div>
+    <div class="step s3" style="display:grid;place-items:center">
+      <svg class="dg" viewBox="0 0 260 270" style="max-width:66%" aria-label="A trust shield">
+        <defs><radialGradient id="sg" cx="50%" cy="40%" r="62%"><stop offset="0" stop-color="#4EA6FF" stop-opacity=".55"/><stop offset="1" stop-color="#4EA6FF" stop-opacity="0"/></radialGradient></defs>
+        <circle cx="130" cy="120" r="112" fill="url(#sg)"/>
+        <path class="nd acc glow pop p1" d="M130 26 L214 58 V150 C214 208 176 244 130 262 C84 244 46 208 46 150 V58 Z"/>
+        <path class="ln acc draw p3" pathLength="1" d="M96 132 l24 26 l50 -60" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div></div></section>
+
+  <!-- 7 SOLUTION · Act II · Notes: The product in one line. It governs WHETHER an action proceeds — never WHAT the action is. -->
+  <section class="slide" data-act="2"><div class="canvas">
+    <p class="eyebrow step s1">The solution</p>
+    <h2 class="step s2">One governed front door for <span class="grad">every</span> decision.</h2>
+    <div class="step s3 figwrap">
+      <svg class="dg" viewBox="0 0 1000 210" aria-label="All agents pass through one governed gate to execution">
+        <g class="tx" font-size="15" text-anchor="middle">
+          <rect class="nd pop p1" x="30" y="34" width="150" height="40" rx="10"/><text x="105" y="59">Agent</text>
+          <rect class="nd pop p1" x="30" y="86" width="150" height="40" rx="10"/><text x="105" y="111">Agent</text>
+          <rect class="nd pop p1" x="30" y="138" width="150" height="40" rx="10"/><text x="105" y="163">Agent</text>
+        </g>
+        <g class="ln acc"><path class="draw p2" pathLength="1" d="M180 54 C270 54 300 105 372 105"/><path class="draw p2" pathLength="1" d="M180 106 H372"/><path class="draw p2" pathLength="1" d="M180 158 C270 158 300 105 372 105"/></g>
+        <rect class="nd acc glow pop p3" x="372" y="58" width="248" height="94" rx="16"/>
+        <text x="496" y="100" text-anchor="middle" class="tx" font-size="19">Governance Layer</text>
+        <text x="496" y="126" text-anchor="middle" class="txs" font-size="10">GOVERNS WHETHER · NOT WHAT</text>
+        <path class="ln acc draw p4" pathLength="1" d="M620 105 H796" marker-end="url(#am7)"/>
+        <rect class="nd pop p5" x="800" y="66" width="170" height="78" rx="14"/><text x="885" y="100" text-anchor="middle" class="tx" font-size="16">Execution</text><text x="885" y="122" text-anchor="middle" class="txs" font-size="9">CORE BANKING</text>
+        <defs><marker id="am7" markerWidth="10" markerHeight="10" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--accent)"/></marker></defs>
+      </svg>
+    </div>
+    <p class="sub step s5">Governance externalized into one reusable capability — never rebuilt inside every agent.</p>
+  </div></section>
+
+  <!-- 8 SYSTEM CONTEXT · Act II · Notes: We sit in the decision path, never the money path. Consume identity and risk; emit a verdict; the agent executes. -->
+  <section class="slide" data-act="2"><div class="canvas">
+    <p class="eyebrow step s1">Where it sits</p>
+    <h2 class="step s2">In the <span class="grad">decision</span> path — never the money path.</h2>
+    <div class="step s3 figwrap">
+      <svg class="dg" viewBox="0 0 1000 280" aria-label="System context">
+        <text x="500" y="30" text-anchor="middle" class="txs" font-size="11">ENTERPRISE SIGNALS</text>
+        <rect class="nd pop p1" x="356" y="44" width="130" height="40" rx="9"/><text x="421" y="70" text-anchor="middle" class="tx" font-size="13">Identity</text>
+        <rect class="nd pop p1" x="514" y="44" width="130" height="40" rx="9"/><text x="579" y="70" text-anchor="middle" class="tx" font-size="13">Fraud signal</text>
+        <path class="ln draw p2" pathLength="1" d="M421 84 V120"/><path class="ln draw p2" pathLength="1" d="M579 84 V120"/>
+        <rect class="nd pop p1" x="40" y="130" width="150" height="60" rx="13"/><text x="115" y="166" text-anchor="middle" class="tx" font-size="16">Agent</text>
+        <rect class="nd acc glow pop p3" x="360" y="120" width="280" height="82" rx="16"/><text x="500" y="156" text-anchor="middle" class="tx" font-size="19">Governance Layer</text><text x="500" y="181" text-anchor="middle" class="txs" font-size="10">DECIDE · RECORD · CONTAIN</text>
+        <rect class="nd pop p5" x="812" y="130" width="150" height="60" rx="13"/><text x="887" y="160" text-anchor="middle" class="tx" font-size="14">Core banking</text><text x="887" y="180" text-anchor="middle" class="txs" font-size="9">EXECUTION</text>
+        <path class="ln acc draw p4" pathLength="1" d="M190 152 H356" marker-end="url(#am8)"/>
+        <path class="ln acc draw p4" pathLength="1" d="M356 178 H192" marker-end="url(#am8)"/>
+        <path class="ln draw p6" pathLength="1" stroke="var(--faint)" stroke-dasharray="4 7" d="M192 190 C440 258 620 258 810 190" marker-end="url(#am8f)"/>
+        <text x="272" y="144" text-anchor="middle" class="txs" font-size="9">request</text>
+        <text x="272" y="196" text-anchor="middle" class="txs" font-size="9">verdict</text>
+        <text x="500" y="256" text-anchor="middle" class="txs" font-size="9" fill="var(--faint)">executes only if allowed</text>
+        <defs><marker id="am8" markerWidth="10" markerHeight="10" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--accent)"/></marker>
+        <marker id="am8f" markerWidth="10" markerHeight="10" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--faint)"/></marker></defs>
+      </svg>
+    </div>
+  </div></section>
+
+  <!-- 9 TWO-PLANE — HERO · Act III · Notes: The one diagram to remember. A minimal fail-safe plane on the critical path; a rich plane beside it; containment reaches the gate out-of-band, like an emergency brake. -->
+  <section class="slide" data-act="3"><div class="canvas">
+    <p class="eyebrow step s1">The architecture · the signature</p>
+    <h2 class="step s2">Two planes: <span class="grad">fast &amp; fail-safe</span>, beside rich &amp; tolerant.</h2>
+    <div class="step s3 figwrap">
+      <svg class="dg" viewBox="0 0 1000 340" aria-label="Two-plane architecture">
+        <defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(46,134,230,.14)"/><stop offset="1" stop-color="rgba(46,134,230,.03)"/></linearGradient>
+        <marker id="a9" markerWidth="10" markerHeight="10" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--accent)"/></marker>
+        <marker id="a9e" markerWidth="11" markerHeight="11" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--esc)"/></marker></defs>
+        <!-- decision plane -->
+        <rect class="pop p1 glow" x="24" y="20" width="952" height="128" rx="18" fill="url(#pg)" stroke="var(--accent)" stroke-opacity=".5"/>
+        <text x="48" y="48" class="txs" font-size="11" fill="var(--accent)">DECISION PLANE · CRITICAL PATH · FAIL-SAFE</text>
+        <g class="tx" font-size="15" text-anchor="middle">
+          <rect class="nd acc pop p2" x="64" y="64" width="150" height="58" rx="11"/><text x="139" y="98">Integration</text>
+          <rect class="nd acc pop p3" x="256" y="64" width="150" height="58" rx="11"/><text x="331" y="98">Decision · PDP</text>
+          <rect class="nd acc pop p4" x="448" y="64" width="150" height="58" rx="11"/><text x="523" y="98">AI pipeline</text>
+        </g>
+        <path class="ln acc draw p3" pathLength="1" d="M214 93 H256" marker-end="url(#a9)"/>
+        <path class="ln acc draw p4" pathLength="1" d="M406 93 H448" marker-end="url(#a9)"/>
+        <rect class="nd glow pop p5" x="726" y="60" width="200" height="66" rx="13" stroke="var(--accent)"/><text x="826" y="90" text-anchor="middle" class="tx" font-size="15">Evidence Ledger</text><text x="826" y="110" text-anchor="middle" class="txs" font-size="9">APPEND-ONLY</text>
+        <path class="ln acc draw p5" pathLength="1" d="M598 96 C660 118 668 93 724 93" marker-end="url(#a9)"/>
+        <!-- control plane -->
+        <rect class="pop p6" x="24" y="176" width="952" height="140" rx="18" fill="var(--glass)" stroke="var(--brd)"/>
+        <text x="48" y="204" class="txs" font-size="11">CONTROL PLANE · OFF CRITICAL PATH</text>
+        <g class="tx" font-size="15" text-anchor="middle">
+          <rect class="nd pop p6" x="64" y="222" width="180" height="66" rx="11"/><text x="154" y="260">Policy</text>
+          <rect class="nd pop p6" x="272" y="222" width="180" height="66" rx="11"/><text x="362" y="260">Registry</text>
+          <rect class="nd pop p6" x="480" y="222" width="180" height="66" rx="11"/><text x="570" y="260">Approval</text>
+          <rect class="nd amber pop p7" x="688" y="222" width="238" height="66" rx="11"/><text x="807" y="260" fill="var(--esc)">Containment</text>
+        </g>
+        <path class="ln amber draw p8" pathLength="1" stroke-dasharray="6 7" d="M807 222 C807 168 200 158 139 124" marker-end="url(#a9e)"/>
+        <text x="470" y="150" class="txs" font-size="10" fill="var(--esc)">emergency brake · out-of-band</text>
+      </svg>
+    </div>
+  </div></section>
+
+  <!-- 10 GOVERNANCE FLOW · Act III · Notes: Every sensitive action becomes one Governance Request with exactly one of three verdicts. High-risk blocks inline; low-risk is governed async. -->
+  <section class="slide" data-act="3"><div class="canvas">
+    <p class="eyebrow step s1">The governance flow</p>
+    <h2 class="step s2">Every action → one <span class="grad">verdict.</span></h2>
+    <div class="step s3 figwrap">
+      <svg class="dg" viewBox="0 0 1000 230" aria-label="A request becomes allow, escalate or deny">
+        <rect class="nd pop p1" x="30" y="86" width="210" height="56" rx="12"/><text x="135" y="112" text-anchor="middle" class="tx" font-size="15">Governance Request</text><text x="135" y="131" text-anchor="middle" class="txs" font-size="9">IDENTITY-BOUND</text>
+        <path class="ln acc draw p2" pathLength="1" d="M240 114 H344" marker-end="url(#a10)"/>
+        <path class="nd acc glow pop p3" d="M414 58 L468 114 L414 170 L360 114 Z"/>
+        <text x="414" y="110" text-anchor="middle" class="tx" font-size="13">Govern</text><text x="414" y="126" text-anchor="middle" class="txs" font-size="7">POLICY · RISK</text>
+        <path class="ln g draw p4" pathLength="1" d="M468 96 C560 58 620 50 700 50" stroke-width="2.5" marker-end="url(#a10g)"/>
+        <path class="ln amber draw p5" pathLength="1" d="M468 114 H700" stroke-width="2.5" marker-end="url(#a10e)"/>
+        <path class="ln r draw p6" pathLength="1" d="M468 132 C560 170 620 178 700 178" stroke-width="2.5" marker-end="url(#a10d)"/>
+        <g font-size="15" text-anchor="middle" font-weight="700">
+          <rect class="pop p4" x="700" y="30" width="180" height="40" rx="20" fill="none" stroke="var(--allow)" stroke-width="2"/><text x="790" y="56" fill="var(--allow)">ALLOW</text>
+          <rect class="pop p5" x="700" y="94" width="180" height="40" rx="20" fill="none" stroke="var(--esc)" stroke-width="2"/><text x="790" y="120" fill="var(--esc)">ESCALATE</text>
+          <rect class="pop p6" x="700" y="158" width="180" height="40" rx="20" fill="none" stroke="var(--deny)" stroke-width="2"/><text x="790" y="184" fill="var(--deny)">DENY</text>
+        </g>
+        <defs><marker id="a10" markerWidth="10" markerHeight="10" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--accent)"/></marker>
+        <marker id="a10g" markerWidth="9" markerHeight="9" refX="5" refY="4" orient="auto"><path d="M0 0 L7 4 L0 8 Z" fill="var(--allow)"/></marker>
+        <marker id="a10e" markerWidth="9" markerHeight="9" refX="5" refY="4" orient="auto"><path d="M0 0 L7 4 L0 8 Z" fill="var(--esc)"/></marker>
+        <marker id="a10d" markerWidth="9" markerHeight="9" refX="5" refY="4" orient="auto"><path d="M0 0 L7 4 L0 8 Z" fill="var(--deny)"/></marker></defs>
+      </svg>
+    </div>
+    <p class="sub step s6">High-risk blocks inline, fail-closed. Low-risk is governed asynchronously.</p>
+  </div></section>
+
+  <!-- 11 THE AI, MADE SAFE · Act III · Notes: The AI part, kept safe. Models sharpen risk and draft the reason — the allow/deny authority stays deterministic. A model never decides. -->
+  <section class="slide" data-act="3"><div class="canvas">
+    <p class="eyebrow step s1">The AI, made safe</p>
+    <h2 class="step s2">The model <span class="grad">informs.</span> It never decides.</h2>
+    <div class="step s3 figwrap">
+      <svg class="dg" viewBox="0 0 1000 130" aria-label="AI decision pipeline">
+        <defs><marker id="ap" markerWidth="9" markerHeight="9" refX="5" refY="4" orient="auto"><path d="M0 0 L7 4 L0 8 Z" fill="var(--faint)"/></marker></defs>
+        <g font-size="13" text-anchor="middle" class="tx">
+          <rect class="nd pop p1" x="8" y="42" width="140" height="46" rx="10"/><text x="78" y="70">Policy</text>
+          <rect class="nd acc pop p2" x="176" y="42" width="140" height="46" rx="10"/><text x="246" y="70">Risk</text>
+          <rect class="nd acc pop p3" x="344" y="42" width="150" height="46" rx="10"/><text x="419" y="70">Confidence</text>
+          <rect class="nd acc pop p4" x="522" y="42" width="150" height="46" rx="10"/><text x="597" y="70">Explain</text>
+          <rect class="nd pop p5" x="700" y="42" width="130" height="46" rx="10"/><text x="765" y="70">Compose</text>
+          <rect class="nd glow pop p6" x="858" y="42" width="134" height="46" rx="10" stroke="var(--accent)"/><text x="925" y="70">Decision</text>
+        </g>
+        <g class="ln" stroke="var(--faint)"><path class="draw p2" pathLength="1" d="M148 65 h28" marker-end="url(#ap)"/><path class="draw p3" pathLength="1" d="M316 65 h28" marker-end="url(#ap)"/><path class="draw p4" pathLength="1" d="M494 65 h28" marker-end="url(#ap)"/><path class="draw p5" pathLength="1" d="M672 65 h28" marker-end="url(#ap)"/><path class="draw p6" pathLength="1" d="M830 65 h28" marker-end="url(#ap)"/></g>
+        <text x="333" y="112" text-anchor="middle" class="txs" font-size="10" fill="var(--accent)">model-backed — behind a Strategy interface, never holds authority</text>
+      </svg>
+    </div>
+    <p class="sub step s6">Every outcome carries a human-readable reason — for allow, deny and escalate alike.</p>
+  </div></section>
+
+  <!-- 12 SECURITY · Act IV · Notes: Zero trust. Six independent layers; no single control has to be perfect. Identity verified once at the edge, propagated unbroken. -->
+  <section class="slide" data-act="4"><div class="canvas"><div class="split w">
+    <div>
+      <p class="eyebrow step s1">Can it be subverted?</p>
+      <h2 class="step s2">Defense in <span class="grad">depth.</span></h2>
+      <p class="sub step s3">Six independent layers bound the blast radius — no single control has to be perfect.</p>
+    </div>
+    <div class="step s3">
+      <svg class="dg" viewBox="0 0 470 300" aria-label="Six security layers">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--accent3)"/><stop offset="1" stop-color="var(--accent)"/></linearGradient></defs>
+        <g font-size="14" class="tx">
+          <g class="pop p1"><rect x="30" y="8" width="410" height="38" rx="8" fill="rgba(78,166,255,.05)" stroke="var(--brd)"/><text x="50" y="32">Edge identity</text></g>
+          <g class="pop p2"><rect x="30" y="54" width="410" height="38" rx="8" fill="rgba(78,166,255,.08)" stroke="var(--brd)"/><text x="50" y="78">Runtime authorization</text></g>
+          <g class="pop p3"><rect x="30" y="100" width="410" height="38" rx="8" fill="rgba(78,166,255,.11)" stroke="var(--brd)"/><text x="50" y="124">Versioned policy</text></g>
+          <g class="pop p4"><rect x="30" y="146" width="410" height="38" rx="8" fill="rgba(78,166,255,.14)" stroke="var(--brd)"/><text x="50" y="170">Fail-safe decisioning</text></g>
+          <g class="pop p5"><rect x="30" y="192" width="410" height="38" rx="8" fill="rgba(78,166,255,.17)" stroke="var(--brd)"/><text x="50" y="216">Tamper-evident evidence</text></g>
+          <g class="pop p6"><rect x="30" y="238" width="410" height="38" rx="8" fill="url(#lg)" stroke="var(--accent)"/><text x="50" y="262" fill="#fff">Out-of-band containment</text></g>
+        </g>
+      </svg>
+    </div>
+  </div></div></section>
+
+  <!-- 13 FAIL-SAFE · Act IV · Notes: The single most important behavioural promise. Uncertain about a high-risk action? It does not guess — it refuses. Throughput yields before safety. -->
+  <section class="slide" data-act="4"><div class="canvas center">
+    <p class="eyebrow step s1" style="justify-content:center">What happens when things break?</p>
+    <h2 class="step s2" style="margin-inline:auto">When in doubt, it <span style="color:var(--deny)">says no.</span></h2>
+    <div class="step s3 figwrap" style="max-width:44%;margin-inline:auto">
+      <svg class="dg" viewBox="0 0 420 236" aria-label="Uncertainty resolves to a safe outcome">
+        <path class="ln" pathLength="1" d="M40 200 A170 170 0 0 1 380 200" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="16" stroke-linecap="round"/>
+        <path class="draw p1" pathLength="1" d="M40 200 A170 170 0 0 1 132 62" fill="none" stroke="var(--deny)" stroke-width="16" stroke-linecap="round"/>
+        <path class="draw p2" pathLength="1" d="M132 62 A170 170 0 0 1 288 62" fill="none" stroke="var(--esc)" stroke-width="16" stroke-linecap="round"/>
+        <path class="draw p3" pathLength="1" d="M288 62 A170 170 0 0 1 380 200" fill="none" stroke="var(--allow)" stroke-width="16" stroke-linecap="round"/>
+        <g class="pop p4"><line x1="210" y1="200" x2="120" y2="98" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/><circle cx="210" cy="200" r="9" fill="var(--ink)"/></g>
+        <text x="66" y="150" class="tx" font-size="13" fill="var(--deny)">DENY</text>
+        <text x="196" y="42" class="tx" font-size="13" fill="var(--esc)" text-anchor="middle">ESCALATE</text>
+        <text x="336" y="150" class="tx" font-size="13" fill="var(--allow)" text-anchor="end">ALLOW</text>
+      </svg>
+    </div>
+    <p class="sub step s5" style="margin-inline:auto">Lose a signal, a dependency, or confidence — high-risk fails closed. Throughput yields before safety does.</p>
+  </div></section>
+
+  <!-- 14 EVIDENCE · Act IV · Notes: Trust you can prove. Decisions are events, never mutated. Any decision replays years later with its policy version, reason and owner intact. -->
+  <section class="slide" data-act="4"><div class="canvas">
+    <p class="eyebrow step s1">Can you prove it?</p>
+    <h2 class="step s2">Every decision, <span class="grad">provable forever.</span></h2>
+    <div class="step s3 figwrap">
+      <svg class="dg" viewBox="0 0 1000 150" aria-label="Immutable evidence chain">
+        <defs><marker id="al" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0 0 L7 4 L0 8 Z" fill="var(--accent)"/></marker></defs>
+        <g font-size="13" text-anchor="middle" class="tx">
+          <g class="pop p1"><rect class="nd acc" x="30" y="40" width="184" height="72" rx="14"/><text x="122" y="72">Decision</text><text x="122" y="92" class="txs" font-size="8">POLICY vN · OWNER</text></g>
+          <g class="pop p2"><rect class="nd acc" x="274" y="40" width="184" height="72" rx="14"/><text x="366" y="72">Decision</text><text x="366" y="92" class="txs" font-size="8">REASON · RISK</text></g>
+          <g class="pop p3"><rect class="nd acc glow" x="518" y="40" width="184" height="72" rx="14"/><text x="610" y="72">Decision</text><text x="610" y="92" class="txs" font-size="8">IMMUTABLE</text></g>
+          <g class="pop p4"><rect class="nd" x="762" y="40" width="184" height="72" rx="14"/><text x="854" y="82" class="txs" font-size="20" fill="var(--faint)">· · ·</text></g>
+        </g>
+        <g class="ln acc"><path class="draw p2" pathLength="1" d="M214 76 h60" marker-end="url(#al)"/><path class="draw p3" pathLength="1" d="M458 76 h60" marker-end="url(#al)"/><path class="draw p4" pathLength="1" d="M702 76 h60" marker-end="url(#al)"/></g>
+      </svg>
+    </div>
+    <p class="sub step s5">Append-only, tamper-evident, reconstructable on demand — minutes, not weeks.</p>
+  </div></section>
+
+  <!-- 15 SCALE · Act IV · Notes: Stateless where it's fast; the only hard, stateful thing is the evidence ledger — replicated, zero-loss. Active-active. The hundredth agent costs no more than the tenth. -->
+  <section class="slide" data-act="4"><div class="canvas">
+    <p class="eyebrow step s1">Does it scale?</p>
+    <h2 class="step s2">Stateless where it's <span class="grad">fast</span> — replicated where it's <span class="grad">true.</span></h2>
+    <div class="step s3 figwrap">
+      <svg class="dg" viewBox="0 0 1000 236" aria-label="Active-active deployment over a replicated ledger">
+        <g class="pop p1"><rect x="40" y="30" width="380" height="150" rx="18" fill="var(--glass)" stroke="var(--brd)"/><text x="62" y="58" class="txs" font-size="11" fill="var(--accent)">REGION A · ACTIVE</text>
+          <rect class="nd acc" x="64" y="76" width="150" height="44" rx="10"/><text x="139" y="103" text-anchor="middle" class="tx" font-size="13">Decision</text>
+          <rect class="nd" x="238" y="76" width="150" height="44" rx="10"/><text x="313" y="103" text-anchor="middle" class="tx" font-size="13">Control</text>
+          <text x="230" y="154" text-anchor="middle" class="txs" font-size="10" fill="var(--faint)">stateless · N+ redundant</text></g>
+        <g class="pop p2"><rect x="580" y="30" width="380" height="150" rx="18" fill="var(--glass)" stroke="var(--brd)"/><text x="602" y="58" class="txs" font-size="11" fill="var(--accent)">REGION B · ACTIVE</text>
+          <rect class="nd acc" x="604" y="76" width="150" height="44" rx="10"/><text x="679" y="103" text-anchor="middle" class="tx" font-size="13">Decision</text>
+          <rect class="nd" x="778" y="76" width="150" height="44" rx="10"/><text x="853" y="103" text-anchor="middle" class="tx" font-size="13">Control</text></g>
+        <rect class="nd glow pop p4" x="370" y="190" width="260" height="36" rx="12" stroke="var(--accent)"/><text x="500" y="213" text-anchor="middle" class="tx" font-size="13">Evidence · replicated · zero-loss</text>
+        <path class="ln acc draw p3" pathLength="1" d="M230 180 V206 H370"/><path class="ln acc draw p3" pathLength="1" d="M770 180 V206 H630"/>
+      </svg>
+    </div>
+  </div></section>
+
+  <!-- 16 KEY DECISIONS · Act V · Notes: If they remember four engineering bets, these are the four. Each is defensible and traces to a principle. -->
+  <section class="slide" data-act="5"><div class="canvas">
+    <p class="eyebrow step s1">Why this is the right design</p>
+    <h2 class="step s2">Four decisions do the <span class="grad">heavy lifting.</span></h2>
+    <div class="cards c4">
+      <div class="card step s2"><div class="k">01</div><h3>External by design</h3><p>Governance lives outside the agent — so it can't be re-fragmented.</p></div>
+      <div class="card step s3"><div class="k">02</div><h3>Hybrid enforcement</h3><p>Inline for high-risk; async for the rest. Proportionate.</p></div>
+      <div class="card step s4"><div class="k">03</div><h3>Fail-closed</h3><p>Uncertainty resolves to deny or escalate. Never fail-open.</p></div>
+      <div class="card step s5"><div class="k">04</div><h3>Evidence by construction</h3><p>Event-sourced, immutable — reproducibility is structural.</p></div>
+    </div>
+  </div></section>
+
+  <!-- 17 FUTURE · Act V · Notes: One model, growing reach. Nothing on the roadmap changes what governance means — only what it governs. -->
+  <section class="slide" data-act="5"><div class="canvas">
+    <p class="eyebrow step s1">Where it goes</p>
+    <h2 class="step s2">One model. <span class="grad">Growing reach.</span></h2>
+    <div class="cards c3">
+      <div class="card step s2"><h3>Third-party agents</h3><p>The same front door — with a tightened trust boundary.</p></div>
+      <div class="card step s3"><h3>Predictive governance</h3><p>Anticipate risk from the evidence stream — advisory, never authority.</p></div>
+      <div class="card step s4"><h3>All enterprise AI</h3><p>Governance as shared infrastructure, beyond finance.</p></div>
+    </div>
+    <p class="sub step s5">Capabilities expand. The principles never move.</p>
+  </div></section>
+
+  <!-- 18 CLOSE · Act V · Notes: Land the thesis and stop. Let the three chips do the closing. Do not add a summary. -->
+  <section class="slide" data-act="5"><div class="canvas center">
+    <p class="eyebrow step s1" style="justify-content:center">The idea, in one line</p>
+    <h1 class="step s2" style="margin-inline:auto;max-width:20ch">Not governing AI. Governing <span class="grad">autonomous financial decisions.</span></h1>
+    <p class="sub step s3" style="margin-inline:auto">Every decision — whichever agent makes it — through a single trusted place, before it can take effect.</p>
+    <div class="chips step s4" style="justify-content:center"><span class="chip a">ALLOW</span><span class="chip e">ESCALATE</span><span class="chip d">DENY</span></div>
+  </div></section>
+
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var num=document.getElementById('num'),prog=document.getElementById('prog'),body=document.body;
+  var i=0,busy=false,pad=function(n){return(n<10?'0':'')+n;};
+  function show(n){
+    n=Math.max(0,Math.min(slides.length-1,n));
+    slides[i].classList.remove('active'); i=n; var s=slides[i]; s.classList.add('active');
+    body.setAttribute('data-act', s.getAttribute('data-act'));
+    body.classList.toggle('tense', i===4);
+    num.innerHTML='<b>'+pad(i+1)+'</b> / '+pad(slides.length);
+    prog.style.width=(i/(slides.length-1)*100)+'%';
+  }
+  show(0);
+  function next(){show(i+1);} function prev(){show(i-1);}
+  document.getElementById('next').onclick=next; document.getElementById('prev').onclick=prev;
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown','PageDown',' '].indexOf(e.key)>-1){e.preventDefault();next();}
+    if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>-1){e.preventDefault();prev();}
+    if(e.key==='Home'){e.preventDefault();show(0);} if(e.key==='End'){e.preventDefault();show(slides.length-1);}
+  });
+  // wheel (debounced)
+  var wl=0;
+  window.addEventListener('wheel',function(e){var t=Date.now();if(t-wl<650)return;if(Math.abs(e.deltaY)<18)return;wl=t;e.deltaY>0?next():prev();},{passive:true});
+  // touch
+  var y0=null,x0=null;
+  window.addEventListener('touchstart',function(e){y0=e.touches[0].clientY;x0=e.touches[0].clientX;},{passive:true});
+  window.addEventListener('touchend',function(e){if(y0===null)return;var dy=e.changedTouches[0].clientY-y0,dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dy)>50||Math.abs(dx)>50){ (dy<-50||dx<-50)?next():prev(); } y0=x0=null;},{passive:true});
+})();
+</script>
