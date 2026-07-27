@@ -31,12 +31,10 @@ For architecture review and technical defense:
 
 ## NOTE: Same files are provided in the google drive provided.
 
-## Online Presentation
+**Interactive Presentation:** https://NOXious48.github.io/codestreet2026_submission/
 
-The presentation is also available in an interactive format:
-
-**GitHub Pages:**  
-https://NOXious48.github.io/codestreet2026_submission/
+**Documentation Link:**
+https://drive.google.com/drive/folders/1gHbIoO6DPUa7mfoDMCxkKeR_CdHRYioQ?usp=sharing
 
 ---
 
