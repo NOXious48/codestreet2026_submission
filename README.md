@@ -18,23 +18,18 @@ This repository contains the complete submission package, including the project 
 
 If you only have a few minutes:
 
-1. **presentation.pdf** — Project overview, architecture, and key innovations.
+1. **presentation.pdf** (In google drive link) — Project overview, architecture, and key innovations.
 
 For a deeper technical understanding:
 
-2. **prd.pdf** — Concise Product Requirements Document.
-3. **sdd.pdf** — Concise Solution & System Design.
-
-For complete technical details:
-
-4. **detailed_prd.pdf** — Full Product Requirements Document.
-5. **detailed_sdd.pdf** — Full Solution & System Design.
+2. **PRD.md** — Concise Product Requirements Document.
+3. **SDD.md** — Concise Solution & System Design.
 
 For architecture review and technical defense:
 
-6. **judges_qa.pdf** — Answers to common architecture, security, scalability, operational, and implementation questions.
+4. **judges_qa.md** — Answers to common architecture, security, scalability, operational, and implementation questions.
 
----
+## NOTE: Same files are provided in the google drive provided.
 
 ## Online Presentation
 
