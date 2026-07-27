@@ -8,7 +8,7 @@
 
 ## Overview
 
-AEGIS is an enterprise governance platform designed to safely manage autonomous AI agents operating in financial systems. Instead of embedding governance logic inside every agent, AEGIS provides a centralized layer for policy enforcement, risk-aware authorization, explainability, auditability, and operational control.
+Enterprise AI Governance Layer is an enterprise governance platform designed to safely manage autonomous AI agents operating in financial systems. Instead of embedding governance logic inside every agent, Our System provides a centralized layer for policy enforcement, risk-aware authorization, explainability, auditability, and operational control.
 
 This repository contains the complete submission package, including the project presentation, architecture documentation, product specification, and a technical Q&A guide.
 
