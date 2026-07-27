@@ -1,9 +1,9 @@
 # Solution & System Design Document — Enterprise AI Governance Layer
 
-> **Program:** American Express CodeStreet 2026 · **Deliverable:** 2 of 3
-> **Companion to:** PRD v1.0
+**Team idk????** · Pushp Raj Panth · Aryan Jain
 
-**Canonical terminology (used verbatim throughout — no synonyms).** _Agent_ · _Governance Request_ (the proposed action an Agent submits) · _Decision_ (allow / deny / escalate) · _Policy_ · _Risk Evaluation_ · _Confidence_ · _Explainability_ · _Approval_ · _Evidence_ · _Decision Engine_ · _Integration Layer (PEP)_ · _Decision Plane_ / _Control Plane_.
+> **Program:** American Express CodeStreet 2026
+> **Product:** Enterprise AI Governance Layer — _A Governance Platform for Autonomous Financial Agents_
 
 ---
 
@@ -1096,7 +1096,6 @@ _Architecture-level; representative attributes only._
 
 **Patterns:** Event Sourcing, CQRS, Repository, Temporal/Effective-Dating.
 
-
 ---
 
 ## Chapter 12 — API & Interface Contracts
@@ -1166,7 +1165,6 @@ sequenceDiagram
 | AP-7       | Every surface is identity-bound; privileged surfaces separated                    |
 
 **Patterns:** Contract-first interface design, Idempotency Key, Outbox (events), semantic Versioning/compatibility, Adapter (PEP fronting the Decision surface).
-
 
 ---
 

@@ -1,7 +1,9 @@
 # Product Requirements Document — Governance Layer for Financial Agents
 
+**Team idk????** · Pushp Raj Panth · Aryan Jain
+
 > **Program:** American Express CodeStreet 2026
-> **Product (working name):** Enterprise AI Governance Layer — _A Governance Platform for Autonomous Financial Agents_
+> **Product:** Enterprise AI Governance Layer — _A Governance Platform for Autonomous Financial Agents_
 
 ---
 
@@ -2386,7 +2388,6 @@ Any future capability is measured against this list first. If it cannot be added
 The Enterprise AI Governance Layer is not intended to become another AI platform. It is intended to become the **trusted governance foundation** that lets every future autonomous financial agent operate safely, consistently, and accountably across the enterprise. Release 1 delivers that foundation completely; everything after it adds reach and richness on top of an identity that does not move.
 
 The deeper point is the one this document has returned to throughout. **This product is not about governing AI. It is about governing autonomous financial decisions** — the moments when software, acting on the institution's behalf, moves money, changes a customer's standing, or speaks in the institution's name. As those moments multiply, the enterprise's task is not to make each agent individually trustworthy, one at a time, forever. It is to ensure that **every autonomous decision — no matter which agent makes it, no matter what it is — passes through a single trusted place before it can take effect.** That place is the product. That is the whole idea, and it is the idea that must remain true no matter how far the product grows.
-
 
 ---
 
